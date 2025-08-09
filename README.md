@@ -2,13 +2,16 @@
 
 Kotlin + Spring Boot + Gradle (Kotlin DSL) を使用した練習プロジェクトです。
 
+Kotlin の感触を知るために、AI に作らせました。
+
 ## 技術スタック
 
-- **Kotlin**: 1.9.20
+- **Kotlin**: 2.0.20 (K2 compiler)
 - **Spring Boot**: 3.2.0
 - **Gradle**: 8.5 (Kotlin DSL)
 - **Java**: 17
 - **データベース**: H2 (インメモリ)
+- **テストフレームワーク**: JUnit 5, Kotlin.test, AssertJ 3.24.2
 
 ## プロジェクト構成
 
@@ -18,23 +21,33 @@ src/
 │   ├── kotlin/
 │   │   └── com/example/kotlinspringpractice/
 │   │       ├── KotlinSpringPracticeApplication.kt  # メインアプリケーション
+│   │       ├── TestMain.kt                         # Kotlin機能テスト用
 │   │       ├── controller/
 │   │       │   ├── HelloController.kt              # サンプルコントローラー
 │   │       │   └── UserController.kt               # ユーザー管理API
 │   │       ├── model/
-│   │       │   └── User.kt                         # エンティティ
+│   │       │   └── User.kt                         # ユーザーエンティティ
 │   │       ├── repository/
-│   │       │   └── UserRepository.kt               # リポジトリ
-│   │       └── service/
-│   │           └── UserService.kt                  # サービス層
+│   │       │   └── UserRepository.kt               # データアクセス層
+│   │       ├── service/
+│   │       │   └── UserService.kt                  # ビジネスロジック層
+│   │       └── util/
+│   │           ├── UserUtils.kt                    # トップレベル関数とエクステンション
+│   │           └── StreamOperations.kt             # Kotlin Collection操作の例
 │   └── resources/
 │       └── application.yml                         # 設定ファイル
 └── test/
     └── kotlin/
         └── com/example/kotlinspringpractice/
             ├── KotlinSpringPracticeApplicationTests.kt
-            └── controller/
-                └── HelloControllerTest.kt
+            ├── controller/
+            │   ├── HelloControllerTest.kt
+            │   └── UserControllerTest.kt
+            └── util/
+                ├── UserUtilsTest.kt                # Kotlin.testを使用
+                ├── UserUtilsAssertJTest.kt         # AssertJを使用
+                ├── AssertionComparisonTest.kt      # テストライブラリ比較
+                └── StreamOperationsTest.kt         # Collection操作テスト
 ```
 
 ## 実行方法
@@ -51,7 +64,7 @@ src/
 ./gradlew bootRun
 ```
 
-### 3. 動作確認
+### 2. 動作確認
 
 アプリケーションが起動したら、以下のエンドポイントにアクセスできます：
 
@@ -62,16 +75,33 @@ src/
   - Username: `sa`
   - Password: `password`
 
-### 4. User API エンドポイント
+### 3. User API エンドポイント
+
+#### 基本的な CRUD 操作
 
 - `GET /api/users` - 全ユーザー取得
 - `GET /api/users/{id}` - 特定ユーザー取得
-- `GET /api/users/search?name={name}` - 名前でユーザー検索
 - `POST /api/users` - ユーザー作成
 - `PUT /api/users/{id}` - ユーザー更新
 - `DELETE /api/users/{id}` - ユーザー削除
 
-#### ユーザー作成例
+#### 検索・フィルタリング
+
+- `GET /api/users/search?name={name}` - 名前でユーザー検索
+- `GET /api/users/by-age-category` - 年代別ユーザー分類
+
+#### 統計・分析
+
+- `GET /api/users/statistics` - ユーザー統計情報
+- `GET /api/users/welcome-messages` - ウェルカムメッセージ一覧
+
+#### 特殊な作成方法
+
+- `POST /api/users/with-names?firstName={firstName}&lastName={lastName}&email={email}&age={age}` - 名前分割でユーザー作成
+
+#### 使用例
+
+**基本的なユーザー作成:**
 
 ```bash
 curl -X POST http://localhost:8080/api/users \
@@ -83,18 +113,104 @@ curl -X POST http://localhost:8080/api/users \
   }'
 ```
 
+**名前分割でユーザー作成:**
+
+```bash
+curl -X POST "http://localhost:8080/api/users/with-names?firstName=太郎&lastName=田中&email=tanaka@example.com&age=30"
+```
+
+**統計情報取得:**
+
+```bash
+curl http://localhost:8080/api/users/statistics
+```
+
+**年代別ユーザー分類:**
+
+```bash
+curl http://localhost:8080/api/users/by-age-category
+```
+
 ## テストの実行
 
 ```bash
 ./gradlew test
 ```
 
+### テスト構成
+
+このプロジェクトでは複数のテストライブラリを使用しています：
+
+- **JUnit 5**: テストフレームワーク
+- **Kotlin.test**: Kotlin ネイティブなアサーション
+- **AssertJ**: 流暢なアサーション
+- **Spring Boot Test**: 統合テスト
+
+テスト実行時に 30 個以上のテストが実行され、様々な Kotlin 機能の動作を確認できます。
+
+## Kotlin 機能デモ
+
+### 1. トップレベル関数 (`UserUtils.kt`)
+
+Kotlin ではクラス外にグローバル関数を定義できます：
+
+```kotlin
+// 使用例
+val isValid = validateEmail("test@example.com")
+val formatted = formatUserName("john doe")
+val display = user.getDisplayName() // エクステンション関数
+```
+
+### 2. Collection 操作 (`StreamOperations.kt`)
+
+Java Stream の Kotlin 版操作例：
+
+```kotlin
+// フィルタリングとマッピング
+val adultNames = users
+    .filter { it.age >= 18 }
+    .map { it.name }
+
+// グループ化
+val ageGroups = users.groupBy { it.age / 10 }
+
+// 遅延評価（Sequence）
+val result = users.asSequence()
+    .filter { someExpensiveOperation(it) }
+    .map { anotherExpensiveOperation(it) }
+    .toList()
+```
+
+### 3. 主な Kotlin 言語機能
+
+- **Null 安全性**: `user?.name ?: "Unknown"`
+- **データクラス**: `data class User(...)`
+- **エクステンション関数**: `fun User.getDisplayName()`
+- **高階関数**: `users.filter { condition }`
+- **分割代入**: `val (adults, children) = users.partition { it.age >= 18 }`
+- **スマートキャスト**: 型の自動キャスト
+
 ## 開発での注意点
 
 - Java 17 以上が必要です
 - H2 データベースはインメモリなので、アプリケーション再起動時にデータは消えます
 - 開発時は `spring-boot-devtools` が有効になっているため、コード変更時に自動でリロードされます
+- Kotlin 2.0.20 の K2 コンパイラを使用しているため、コンパイルが高速です
 
-## IDE 設定
+## 学習ポイント
 
-IntelliJ IDEA または VS Code での開発を推奨します。Kotlin プラグインが必要です。
+このプロジェクトで学べる Kotlin の特徴：
+
+1. **Spring Boot と Kotlin の統合**
+2. **データクラスと JPA エンティティ**
+3. **Null 安全性と Optional 不要の設計**
+4. **エクステンション関数による機能拡張**
+5. **Collection 操作（Java Stream より簡潔）**
+6. **複数のテストライブラリの比較**
+7. **Kotlin DSL（Gradle 設定）**
+
+## 参考リンク
+
+- [Kotlin 公式ドキュメント](https://kotlinlang.org/docs/)
+- [Spring Boot + Kotlin](https://spring.io/guides/tutorials/spring-boot-kotlin/)
+- [Kotlin Collection API](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/)

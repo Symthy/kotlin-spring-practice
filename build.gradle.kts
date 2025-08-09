@@ -36,6 +36,7 @@ dependencies {
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
+    testImplementation("org.assertj:assertj-core:3.24.2") // AssertJを明示的に追加
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 

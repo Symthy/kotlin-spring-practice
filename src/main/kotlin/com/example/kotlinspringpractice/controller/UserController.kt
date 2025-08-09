@@ -33,19 +33,60 @@ class UserController(private val userService: UserService) {
         return ResponseEntity.ok(users)
     }
 
+    @GetMapping("/welcome-messages")
+    fun getUserWelcomeMessages(): ResponseEntity<List<String>> {
+        val messages = userService.getUserWelcomeMessages()
+        return ResponseEntity.ok(messages)
+    }
+
+    @GetMapping("/statistics")
+    fun getUserStatistics(): ResponseEntity<Map<String, Any>> {
+        val stats = userService.getUserStatistics()
+        return ResponseEntity.ok(stats)
+    }
+
+    @GetMapping("/by-age-category")
+    fun getUsersByAgeCategory(): ResponseEntity<Map<String, List<User>>> {
+        val categorizedUsers = userService.getUsersByAgeCategory()
+        return ResponseEntity.ok(categorizedUsers)
+    }
+
     @PostMapping
     fun createUser(@Valid @RequestBody user: User): ResponseEntity<User> {
-        val createdUser = userService.createUser(user)
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdUser)
+        return try {
+            val createdUser = userService.createUser(user)
+            ResponseEntity.status(HttpStatus.CREATED).body(createdUser)
+        } catch (e: IllegalArgumentException) {
+            ResponseEntity.badRequest().build()
+        }
+    }
+
+    @PostMapping("/with-names")
+    fun createUserWithNames(
+        @RequestParam firstName: String,
+        @RequestParam lastName: String,
+        @RequestParam email: String,
+        @RequestParam(required = false) age: Int?
+    ): ResponseEntity<User> {
+        return try {
+            val createdUser = userService.createUserWithNames(firstName, lastName, email, age)
+            ResponseEntity.status(HttpStatus.CREATED).body(createdUser)
+        } catch (e: IllegalArgumentException) {
+            ResponseEntity.badRequest().build()
+        }
     }
 
     @PutMapping("/{id}")
     fun updateUser(@PathVariable id: Long, @Valid @RequestBody user: User): ResponseEntity<User> {
-        val updatedUser = userService.updateUser(id, user)
-        return if (updatedUser != null) {
-            ResponseEntity.ok(updatedUser)
-        } else {
-            ResponseEntity.notFound().build()
+        return try {
+            val updatedUser = userService.updateUser(id, user)
+            if (updatedUser != null) {
+                ResponseEntity.ok(updatedUser)
+            } else {
+                ResponseEntity.notFound().build()
+            }
+        } catch (e: IllegalArgumentException) {
+            ResponseEntity.badRequest().build()
         }
     }
 
