@@ -2,13 +2,11 @@ package com.example.kotlinspringpractice.util
 
 import com.example.kotlinspringpractice.model.User
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 class UserUtilsTest {
-
     @Test
     fun `validateEmail should return true for valid emails`() {
         assertTrue(validateEmail("test@example.com"))
@@ -46,15 +44,17 @@ class UserUtilsTest {
 
     @Test
     fun `processUsers should apply processor function`() {
-        val users = listOf(
-            User(id = 1, name = "John", email = "john@example.com", age = 25),
-            User(id = 2, name = "Jane", email = "jane@example.com", age = 30)
-        )
-        
-        val result = processUsers(users) { user -> 
-            createWelcomeMessage(user.name, "Hi")
-        }
-        
+        val users =
+            listOf(
+                User(id = 1, name = "John", email = "john@example.com", age = 25),
+                User(id = 2, name = "Jane", email = "jane@example.com", age = 30),
+            )
+
+        val result =
+            processUsers(users) { user ->
+                createWelcomeMessage(user.name, "Hi")
+            }
+
         assertEquals(2, result.size)
         assertEquals("Hi, John! Welcome to our service.", result[0])
         assertEquals("Hi, Jane! Welcome to our service.", result[1])

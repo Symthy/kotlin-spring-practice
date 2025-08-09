@@ -9,7 +9,9 @@ fun validateEmail(email: String): Boolean {
 }
 
 fun formatUserName(firstName: String, lastName: String): String {
-    return "${firstName.lowercase().replaceFirstChar { it.titlecase() }} ${lastName.lowercase().replaceFirstChar { it.titlecase() }}"
+    val formattedFirst = firstName.lowercase().replaceFirstChar { it.titlecase() }
+    val formattedLast = lastName.lowercase().replaceFirstChar { it.titlecase() }
+    return "$formattedFirst $formattedLast"
 }
 
 fun calculateUserAge(birthYear: Int): Int {

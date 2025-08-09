@@ -2,12 +2,15 @@ package com.example.kotlinspringpractice.service
 
 import com.example.kotlinspringpractice.model.User
 import com.example.kotlinspringpractice.repository.UserRepository
-import com.example.kotlinspringpractice.util.*  // トップレベル関数をインポート
+import com.example.kotlinspringpractice.util.classifyUserByAge
+import com.example.kotlinspringpractice.util.createWelcomeMessage
+import com.example.kotlinspringpractice.util.formatUserName
+import com.example.kotlinspringpractice.util.processUsers
+import com.example.kotlinspringpractice.util.validateEmail
 import org.springframework.stereotype.Service
 
 @Service
 class UserService(private val userRepository: UserRepository) {
-
     fun getAllUsers(): List<User> = userRepository.findAll()
 
     fun getUserById(id: Long): User? = userRepository.findById(id).orElse(null)
@@ -21,12 +24,12 @@ class UserService(private val userRepository: UserRepository) {
         if (!validateEmail(user.email)) {
             throw IllegalArgumentException("Invalid email format: ${user.email}")
         }
-        
+
         val savedUser = userRepository.save(user)
-        
+
         // 拡張関数を使用
-        println("Created user: ${savedUser.getDisplayName()}")
-        
+        println("Created user: ${savedUser.name}")
+
         return savedUser
     }
 
@@ -35,13 +38,13 @@ class UserService(private val userRepository: UserRepository) {
         if (!validateEmail(email)) {
             throw IllegalArgumentException("Invalid email format: $email")
         }
-        
+
         val fullName = formatUserName(firstName, lastName)
         val user = User(name = fullName, email = email, age = age)
-        
+
         val savedUser = userRepository.save(user)
-        println("Created user: ${savedUser.getDisplayName()}")
-        
+        println("Created user: ${savedUser.name}")
+
         return savedUser
     }
 
@@ -65,11 +68,11 @@ class UserService(private val userRepository: UserRepository) {
         val totalUsers = users.size
         val averageAge = users.mapNotNull { it.age }.average().takeIf { !it.isNaN() } ?: 0.0
         val ageCategories = getUsersByAgeCategory()
-        
+
         return mapOf(
             "totalUsers" to totalUsers,
             "averageAge" to averageAge,
-            "ageDistribution" to ageCategories.mapValues { it.value.size }
+            "ageDistribution" to ageCategories.mapValues { it.value.size },
         )
     }
 

@@ -107,6 +107,10 @@ application-dev.properties
 /test-results/
 /test-reports/
 
+# Detekt reports
+/reports/
+detekt-baseline.xml
+
 # Build outputs
 /kotlin-js-store/
 /kotlin/

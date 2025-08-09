@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
 
 plugins {
     id("org.springframework.boot") version "3.2.0"
@@ -6,6 +7,8 @@ plugins {
     kotlin("jvm") version "2.0.20"
     kotlin("plugin.spring") version "2.0.20"
     kotlin("plugin.jpa") version "2.0.20"
+    id("org.jlleitschuh.gradle.ktlint") version "12.1.0"
+    id("com.diffplug.spotless") version "6.25.0"
 }
 
 group = "com.example"
@@ -44,7 +47,7 @@ tasks.withType<KotlinCompile> {
     compilerOptions {
         freeCompilerArgs.addAll(
             "-Xjsr305=strict",
-            "-Xjvm-default=all"
+            "-Xjvm-default=all",
         )
         jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
     }
@@ -52,4 +55,72 @@ tasks.withType<KotlinCompile> {
 
 tasks.withType<Test> {
     useJUnitPlatform()
+}
+
+// コンパイル前にSpotlessを実行
+tasks.withType<KotlinCompile> {
+    dependsOn("spotlessApply")
+}
+
+// KtLint設定（Detektの代替として）
+ktlint {
+    version.set("1.0.1")
+    android.set(false)
+    ignoreFailures.set(false)
+    reporters {
+        reporter(ReporterType.PLAIN)
+        reporter(ReporterType.CHECKSTYLE)
+        reporter(ReporterType.SARIF)
+    }
+    filter {
+        exclude("**/generated/**")
+        include("**/kotlin/**")
+    }
+}
+
+springBoot {
+    mainClass.set("com.example.kotlinspringpractice.KotlinSpringPracticeApplicationKt")
+}
+
+tasks.named("compileKotlin") {
+    dependsOn("spotlessApply")
+}
+
+tasks.named("compileTestKotlin") {
+    dependsOn("spotlessApply")
+}
+
+// Spotless設定 - 自動フォーマット
+spotless {
+    kotlin {
+        target("**/*.kt")
+        targetExclude("**/build/**", "**/bin/**")
+
+        // KtLintでルールチェックと自動修正
+        ktlint("1.0.1")
+            .setEditorConfigPath("$projectDir/.editorconfig")
+            .editorConfigOverride(
+                mapOf(
+                    "ktlint_standard_parameter-list-wrapping" to "disabled",
+                ),
+            )
+
+        // 基本的なフォーマット
+        trimTrailingWhitespace()
+        endWithNewline()
+    }
+
+    kotlinGradle {
+        target("*.gradle.kts")
+        ktlint("1.0.1")
+        trimTrailingWhitespace()
+        endWithNewline()
+    }
+
+    format("misc") {
+        target("**/*.md", "**/.gitignore")
+        targetExclude("**/build/**", "**/bin/**")
+        trimTrailingWhitespace()
+        endWithNewline()
+    }
 }

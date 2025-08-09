@@ -1,8 +1,8 @@
 package com.example.kotlinspringpractice.model
 
 import jakarta.persistence.*
-import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.Email
+import jakarta.validation.constraints.NotBlank
 
 @Entity
 @Table(name = "users")
@@ -21,5 +21,5 @@ data class User(
     val email: String,
 
     @Column
-    val age: Int? = null
+    val age: Int? = null,
 )
