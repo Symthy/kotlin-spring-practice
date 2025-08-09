@@ -1,21 +1,0 @@
-!=== Sequence (遅延評価) ===
-Filtering: Alice
-Filtering: Bob
-Mapping: Bob
-Filtering: Charlie
-Mapping: Charlie
-Filtering: Diana
-Mapping: Diana
-
-#=== Collection (即座評価) ===
-Filtering: Alice
-Filtering: Bob
-Filtering: Charlie
-Filtering: Diana
-Filtering: Eve
-Filtering: Frank
-Filtering: Grace
-Mapping: Bob
-Mapping: Charlie
-Mapping: Diana
-Mapping: Frank
