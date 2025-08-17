@@ -4,9 +4,7 @@ import com.example.kotlinspringpractice.model.User
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-/**
- * AssertJを使った実用的なテスト例
- */
+/** AssertJを使った実用的なテスト例 */
 class UserUtilsAssertJTest {
     @Test
     fun `validateEmail with AssertJ - 成功ケース`() {
@@ -18,9 +16,7 @@ class UserUtilsAssertJTest {
             )
 
         validEmails.forEach { email ->
-            assertThat(validateEmail(email))
-                .`as`("Email '$email' should be valid")
-                .isTrue()
+            assertThat(validateEmail(email)).`as`("Email '$email' should be valid").isTrue()
         }
     }
 
@@ -35,9 +31,7 @@ class UserUtilsAssertJTest {
             )
 
         invalidEmails.forEach { (email, description) ->
-            assertThat(validateEmail(email))
-                .`as`("$description: '$email' should be invalid")
-                .isFalse()
+            assertThat(validateEmail(email)).`as`("$description: '$email' should be invalid").isFalse()
         }
     }
 
@@ -69,10 +63,7 @@ class UserUtilsAssertJTest {
                 User(id = 3, name = "Charlie", email = "charlie@example.com", age = 35),
             )
 
-        val welcomeMessages =
-            processUsers(users) { user ->
-                createWelcomeMessage(user.name, "Hi")
-            }
+        val welcomeMessages = processUsers(users) { user -> createWelcomeMessage(user.name, "Hi") }
 
         assertThat(welcomeMessages)
             .hasSize(3)
@@ -106,17 +97,11 @@ class UserUtilsAssertJTest {
         }
 
         // 境界値のより詳細なテスト
-        assertThat(classifyUserByAge(17))
-            .isNotEqualTo("Adult")
-            .isEqualTo("Minor")
+        assertThat(classifyUserByAge(17)).isNotEqualTo("Adult").isEqualTo("Minor")
 
-        assertThat(classifyUserByAge(18))
-            .isNotEqualTo("Minor")
-            .isEqualTo("Adult")
+        assertThat(classifyUserByAge(18)).isNotEqualTo("Minor").isEqualTo("Adult")
 
-        assertThat(classifyUserByAge(65))
-            .isNotEqualTo("Adult")
-            .isEqualTo("Senior")
+        assertThat(classifyUserByAge(65)).isNotEqualTo("Adult").isEqualTo("Senior")
     }
 
     @Test
@@ -168,28 +153,20 @@ class UserUtilsAssertJTest {
         val evenNumbers = listOf(0, 2, 4, 6, 8, 100)
         val oddNumbers = listOf(1, 3, 5, 7, 9, 99)
 
-        assertThat(evenNumbers)
-            .allMatch { num: Int -> isEven(num) }
-            .`as`("All numbers should be even")
+        assertThat(evenNumbers).allMatch { num: Int -> isEven(num) }.`as`("All numbers should be even")
 
-        assertThat(oddNumbers)
-            .noneMatch { num: Int -> isEven(num) }
-            .`as`("No numbers should be even")
+        assertThat(oddNumbers).noneMatch { num: Int -> isEven(num) }.`as`("No numbers should be even")
     }
 
     @Test
     fun `ジェネリック拡張関数のテスト with AssertJ`() {
         // secondOrNull のテスト
-        assertThat(listOf("first", "second", "third").secondOrNull())
-            .isEqualTo("second")
+        assertThat(listOf("first", "second", "third").secondOrNull()).isEqualTo("second")
 
-        assertThat(listOf("only").secondOrNull())
-            .isNull()
+        assertThat(listOf("only").secondOrNull()).isNull()
 
-        assertThat(emptyList<String>().secondOrNull())
-            .isNull()
+        assertThat(emptyList<String>().secondOrNull()).isNull()
 
-        assertThat(listOf(1, 2).secondOrNull())
-            .isEqualTo(2)
+        assertThat(listOf(1, 2).secondOrNull()).isEqualTo(2)
     }
 }

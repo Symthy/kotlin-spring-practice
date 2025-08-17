@@ -33,7 +33,12 @@ class UserService(private val userRepository: UserRepository) {
         return savedUser
     }
 
-    fun createUserWithNames(firstName: String, lastName: String, email: String, age: Int?): User {
+    fun createUserWithNames(
+        firstName: String,
+        lastName: String,
+        email: String,
+        age: Int?,
+    ): User {
         // トップレベル関数を使用
         if (!validateEmail(email)) {
             throw IllegalArgumentException("Invalid email format: $email")
@@ -51,16 +56,12 @@ class UserService(private val userRepository: UserRepository) {
     fun getUserWelcomeMessages(): List<String> {
         val users = userRepository.findAll()
         // 高階関数を使用
-        return processUsers(users) { user ->
-            createWelcomeMessage(user.name)
-        }
+        return processUsers(users) { user -> createWelcomeMessage(user.name) }
     }
 
     fun getUsersByAgeCategory(): Map<String, List<User>> {
         val users = userRepository.findAll()
-        return users.groupBy { user ->
-            classifyUserByAge(user.age)
-        }
+        return users.groupBy { user -> classifyUserByAge(user.age) }
     }
 
     fun getUserStatistics(): Map<String, Any> {
@@ -76,7 +77,10 @@ class UserService(private val userRepository: UserRepository) {
         )
     }
 
-    fun updateUser(id: Long, updatedUser: User): User? {
+    fun updateUser(
+        id: Long,
+        updatedUser: User,
+    ): User? {
         return if (userRepository.existsById(id)) {
             // バリデーションを追加
             if (!validateEmail(updatedUser.email)) {

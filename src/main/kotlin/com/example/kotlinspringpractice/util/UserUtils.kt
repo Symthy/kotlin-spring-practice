@@ -8,7 +8,10 @@ fun validateEmail(email: String): Boolean {
     return emailRegex.matches(email)
 }
 
-fun formatUserName(firstName: String, lastName: String): String {
+fun formatUserName(
+    firstName: String,
+    lastName: String,
+): String {
     val formattedFirst = firstName.lowercase().replaceFirstChar { it.titlecase() }
     val formattedLast = lastName.lowercase().replaceFirstChar { it.titlecase() }
     return "$formattedFirst $formattedLast"
@@ -25,12 +28,18 @@ fun User.getDisplayName(): String {
 }
 
 // 高階関数の例
-fun processUsers(users: List<User>, processor: (User) -> String): List<String> {
+fun processUsers(
+    users: List<User>,
+    processor: (User) -> String,
+): List<String> {
     return users.map(processor)
 }
 
 // デフォルトパラメータ付きの関数
-fun createWelcomeMessage(name: String, greeting: String = "Hello"): String {
+fun createWelcomeMessage(
+    name: String,
+    greeting: String = "Hello",
+): String {
     return "$greeting, $name! Welcome to our service."
 }
 
@@ -40,15 +49,19 @@ fun square(x: Int) = x * x
 fun isEven(number: Int) = number % 2 == 0
 
 // 型推論も可能
-fun multiply(a: Int, b: Int) = a * b
+fun multiply(
+    a: Int,
+    b: Int,
+) = a * b
 
 // ジェネリック関数
 fun <T> List<T>.secondOrNull(): T? = if (this.size >= 2) this[1] else null
 
 // 年齢による分類
-fun classifyUserByAge(age: Int?): String = when {
-    age == null -> "Unknown"
-    age < 18 -> "Minor"
-    age < 65 -> "Adult"
-    else -> "Senior"
-}
+fun classifyUserByAge(age: Int?): String =
+    when {
+        age == null -> "Unknown"
+        age < 18 -> "Minor"
+        age < 65 -> "Adult"
+        else -> "Senior"
+    }

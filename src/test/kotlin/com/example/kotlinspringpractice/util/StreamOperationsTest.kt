@@ -3,9 +3,7 @@ package com.example.kotlinspringpractice.util
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-/**
- * Kotlin Collection Operations のテスト
- */
+/** Kotlin Collection Operations のテスト */
 class StreamOperationsTest {
     @Test
     fun `フィルタリング操作のテスト`() {
@@ -37,9 +35,7 @@ class StreamOperationsTest {
         val ageGroups = groupUsersByAgeGroup()
 
         // 20代(2), 30代(3), 40代(1)
-        assertThat(ageGroups)
-            .hasSize(3)
-            .containsKeys(2, 3, 4) // 20代、30代、40代
+        assertThat(ageGroups).hasSize(3).containsKeys(2, 3, 4) // 20代、30代、40代
 
         assertThat(ageGroups[2]) // 20代
             .hasSize(3) // Alice(25), Diana(28), Eve(22)
@@ -63,16 +59,10 @@ class StreamOperationsTest {
         assertThat(avgAge).isEqualTo(30.0)
 
         val concatenated = getConcatenatedNames()
-        assertThat(concatenated)
-            .startsWith("Alice")
-            .contains("Bob")
-            .contains("Charlie")
+        assertThat(concatenated).startsWith("Alice").contains("Bob").contains("Charlie")
 
         val summary = getUserSummary()
-        assertThat(summary)
-            .startsWith("Users: ")
-            .contains("Alice(25)")
-            .contains("Grace(unknown)")
+        assertThat(summary).startsWith("Users: ").contains("Alice(25)").contains("Grace(unknown)")
     }
 
     @Test
@@ -84,9 +74,7 @@ class StreamOperationsTest {
         val collectionResult = expensiveOperationWithCollection()
 
         // 結果は同じ
-        assertThat(sequenceResult)
-            .hasSize(3)
-            .isEqualTo(collectionResult)
+        assertThat(sequenceResult).hasSize(3).isEqualTo(collectionResult)
     }
 
     @Test
@@ -99,22 +87,13 @@ class StreamOperationsTest {
     @Test
     fun `検索操作のテスト`() {
         val userA = findFirstUserStartingWithA()
-        assertThat(userA)
-            .isNotNull()
-            .extracting("name")
-            .isEqualTo("Alice")
+        assertThat(userA).isNotNull().extracting("name").isEqualTo("Alice")
 
         val oldest = findOldestUser()
-        assertThat(oldest)
-            .isNotNull()
-            .extracting("name")
-            .isEqualTo("Frank")
+        assertThat(oldest).isNotNull().extracting("name").isEqualTo("Frank")
 
         val youngest = findYoungestUser()
-        assertThat(youngest)
-            .isNotNull()
-            .extracting("name")
-            .isEqualTo("Eve")
+        assertThat(youngest).isNotNull().extracting("name").isEqualTo("Eve")
     }
 
     @Test
@@ -133,18 +112,14 @@ class StreamOperationsTest {
             .endsWith("Frank") // 40歳
 
         val sortedDesc = sortUsersByAgeDescending()
-        assertThat(sortedDesc)
-            .extracting("age")
-            .containsExactly(40, 35, 30, 28, 25, 22)
+        assertThat(sortedDesc).extracting("age").containsExactly(40, 35, 30, 28, 25, 22)
     }
 
     @Test
     fun `重複除去とユニーク操作のテスト`() {
         val uniqueAges = getUniqueAges()
 
-        assertThat(uniqueAges)
-            .hasSize(6)
-            .containsExactlyInAnyOrder(22, 25, 28, 30, 35, 40)
+        assertThat(uniqueAges).hasSize(6).containsExactlyInAnyOrder(22, 25, 28, 30, 35, 40)
 
         val uniqueNameLengths = getUniqueNameLengths()
         assertThat(uniqueNameLengths)
@@ -189,8 +164,7 @@ class StreamOperationsTest {
 
         @Suppress("UNCHECKED_CAST")
         val ageGroups = stats["ageGroups"] as List<Int>
-        assertThat(ageGroups)
-            .containsExactly(2, 3, 4) // 20代、30代、40代
+        assertThat(ageGroups).containsExactly(2, 3, 4) // 20代、30代、40代
     }
 
     @Test
@@ -203,11 +177,7 @@ class StreamOperationsTest {
                 .filter { it.age != null && it.age >= 25 }
                 .sortedByDescending { it.age }
                 .groupBy { it.age!! / 10 }
-                .mapValues { (_, userList) ->
-                    userList
-                        .map { "${it.name}(${it.age})" }
-                        .joinToString(", ")
-                }
+                .mapValues { (_, userList) -> userList.map { "${it.name}(${it.age})" }.joinToString(", ") }
 
         assertThat(result)
             .containsKeys(2, 3, 4)
@@ -227,13 +197,10 @@ class StreamOperationsTest {
                     )
                 }
 
-        assertThat(ageGroupStats[2])
-            .isNotNull()
-            .containsEntry("count", 3)
+        assertThat(ageGroupStats[2]).isNotNull().containsEntry("count", 3)
 
         @Suppress("UNCHECKED_CAST")
         val names20s = (ageGroupStats[2] as Map<String, Any>)["names"] as List<String>
-        assertThat(names20s)
-            .containsExactlyInAnyOrder("Alice", "Diana", "Eve")
+        assertThat(names20s).containsExactlyInAnyOrder("Alice", "Diana", "Eve")
     }
 }

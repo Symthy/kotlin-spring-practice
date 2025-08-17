@@ -1,0 +1,63 @@
+{
+  "name": "Kotlin Spring Boot with PostgreSQL",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "app",
+  "workspaceFolder": "/workspaces/kotlin-spring-practice",
+
+  "features": {
+    "ghcr.io/devcontainers/features/git:1": {}
+  },
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "fwcd.kotlin",
+        "vscjava.vscode-java-pack",
+        "vscjava.vscode-spring-boot-dashboard",
+        "pivotal.vscode-spring-boot",
+        "vmware.vscode-spring-boot",
+        "gabrielbb.vscode-lombok",
+        "redhat.java",
+        "vscjava.vscode-gradle",
+        "ms-vscode.vscode-json",
+        "esbenp.prettier-vscode",
+        "shardulm94.trailing-spaces",
+        "ms-vscode.vscode-typescript-next",
+        "ms-vscode-remote.remote-containers"
+      ],
+      "settings": {
+        "java.configuration.runtimes": [
+          {
+            "name": "JavaSE-21",
+            "path": "/usr/local/openjdk-21"
+          }
+        ],
+        "java.compile.nullAnalysis.mode": "automatic",
+        "java.gradle.java.home": "/usr/local/openjdk-21",
+        "kotlin.languageServer.enabled": true,
+        "files.exclude": {
+          "**/.gradle": true,
+          "**/build": true,
+          "**/.DS_Store": true
+        },
+        "spring.boot.ls.checkjvm": false
+      }
+    }
+  },
+
+  "forwardPorts": [8080, 5432],
+  "portsAttributes": {
+    "8080": {
+      "label": "Spring Boot App",
+      "onAutoForward": "notify"
+    },
+    "5432": {
+      "label": "PostgreSQL Database"
+    }
+  },
+
+  "postCreateCommand": "chmod +x gradlew && ./gradlew build --no-daemon",
+  "postStartCommand": "git config --global --add safe.directory /workspaces/kotlin-spring-practice",
+
+  "remoteUser": "vscode"
+}

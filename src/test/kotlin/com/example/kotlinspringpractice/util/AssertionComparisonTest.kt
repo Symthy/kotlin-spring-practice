@@ -10,9 +10,7 @@ import kotlin.test.assertEquals as ktAssertEquals
 import kotlin.test.assertFalse as ktAssertFalse
 import kotlin.test.assertTrue as ktAssertTrue
 
-/**
- * AssertJとKotlin.testの比較デモ
- */
+/** AssertJとKotlin.testの比較デモ */
 class AssertionComparisonTest {
     @Test
     fun `基本的なアサーション比較`() {
@@ -78,9 +76,7 @@ class AssertionComparisonTest {
     @Test
     fun `例外のアサーション比較`() {
         // === Kotlin.test ===
-        assertThrows<IllegalArgumentException> {
-            validateEmail("invalid-email")
-        }
+        assertThrows<IllegalArgumentException> { validateEmail("invalid-email") }
 
         // === AssertJ - より詳細 ===
         assertThatThrownBy { validateEmail("invalid-email") }
@@ -88,8 +84,7 @@ class AssertionComparisonTest {
             .hasMessage("Invalid email format")
 
         // 例外が発生しないことの確認
-        assertThatCode { validateEmail("valid@example.com") }
-            .doesNotThrowAnyException()
+        assertThatCode { validateEmail("valid@example.com") }.doesNotThrowAnyException()
     }
 
     @Test
@@ -117,10 +112,7 @@ class AssertionComparisonTest {
         val numbers = listOf(2, 4, 6, 8, 10)
 
         // === AssertJ - 全要素の条件チェック ===
-        assertThat(numbers)
-            .allMatch { it % 2 == 0 }
-            .allMatch { it > 0 }
-            .noneMatch { it > 15 }
+        assertThat(numbers).allMatch { it % 2 == 0 }.allMatch { it > 0 }.noneMatch { it > 15 }
 
         // === Kotlin.test - 手動ループ ===
         ktAssertTrue(numbers.all { it % 2 == 0 })
@@ -150,9 +142,7 @@ class AssertionComparisonTest {
 
         // === AssertJ - 詳細で分かりやすいエラーメッセージ ===
         try {
-            assertThat(users)
-                .`as`("ユーザーリストは空ではないはず")
-                .isNotEmpty()
+            assertThat(users).`as`("ユーザーリストは空ではないはず").isNotEmpty()
         } catch (e: AssertionError) {
             println("AssertJ エラー: ${e.message}")
         }

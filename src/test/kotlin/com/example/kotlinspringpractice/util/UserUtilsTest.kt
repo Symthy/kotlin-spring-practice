@@ -50,10 +50,7 @@ class UserUtilsTest {
                 User(id = 2, name = "Jane", email = "jane@example.com", age = 30),
             )
 
-        val result =
-            processUsers(users) { user ->
-                createWelcomeMessage(user.name, "Hi")
-            }
+        val result = processUsers(users) { user -> createWelcomeMessage(user.name, "Hi") }
 
         assertEquals(2, result.size)
         assertEquals("Hi, John! Welcome to our service.", result[0])

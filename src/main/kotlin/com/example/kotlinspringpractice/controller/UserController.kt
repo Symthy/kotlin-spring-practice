@@ -25,7 +25,9 @@ class UserController(private val userService: UserService) {
     }
 
     @GetMapping("/{id}")
-    fun getUserById(@PathVariable id: Long): ResponseEntity<User> {
+    fun getUserById(
+        @PathVariable id: Long,
+    ): ResponseEntity<User> {
         val user = userService.getUserById(id)
         return if (user != null) {
             ResponseEntity.ok(user)
@@ -35,7 +37,9 @@ class UserController(private val userService: UserService) {
     }
 
     @GetMapping("/search")
-    fun searchUsers(@RequestParam name: String): ResponseEntity<List<User>> {
+    fun searchUsers(
+        @RequestParam name: String,
+    ): ResponseEntity<List<User>> {
         val users = userService.searchUsersByName(name)
         return ResponseEntity.ok(users)
     }
@@ -59,7 +63,9 @@ class UserController(private val userService: UserService) {
     }
 
     @PostMapping
-    fun createUser(@Valid @RequestBody user: User): ResponseEntity<User> {
+    fun createUser(
+        @Valid @RequestBody user: User,
+    ): ResponseEntity<User> {
         return try {
             val createdUser = userService.createUser(user)
             ResponseEntity.status(HttpStatus.CREATED).body(createdUser)
@@ -84,7 +90,10 @@ class UserController(private val userService: UserService) {
     }
 
     @PutMapping("/{id}")
-    fun updateUser(@PathVariable id: Long, @Valid @RequestBody user: User): ResponseEntity<User> {
+    fun updateUser(
+        @PathVariable id: Long,
+        @Valid @RequestBody user: User,
+    ): ResponseEntity<User> {
         return try {
             val updatedUser = userService.updateUser(id, user)
             if (updatedUser != null) {
@@ -98,7 +107,9 @@ class UserController(private val userService: UserService) {
     }
 
     @DeleteMapping("/{id}")
-    fun deleteUser(@PathVariable id: Long): ResponseEntity<Void> {
+    fun deleteUser(
+        @PathVariable id: Long,
+    ): ResponseEntity<Void> {
         val deleted = userService.deleteUser(id)
         return if (deleted) {
             ResponseEntity.noContent().build()

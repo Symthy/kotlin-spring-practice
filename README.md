@@ -9,9 +9,10 @@ Kotlin の感触を知るために、AI に作らせました。
 - **Kotlin**: 2.0.20 (K2 compiler)
 - **Spring Boot**: 3.2.0
 - **Gradle**: 8.5 (Kotlin DSL)
-- **Java**: 17
+- **Java**: 21
 - **データベース**: H2 (インメモリ)
 - **テストフレームワーク**: JUnit 5, Kotlin.test, AssertJ 3.24.2
+- **コード品質**: KtLint 12.1.0, Spotless 6.25.0
 
 ## プロジェクト構成
 
@@ -190,12 +191,79 @@ val result = users.asSequence()
 - **分割代入**: `val (adults, children) = users.partition { it.age >= 18 }`
 - **スマートキャスト**: 型の自動キャスト
 
+## 開発環境
+
+### 開発コンテナを使用した開発（推奨）
+
+このプロジェクトは VS Code の Dev Containers 機能に対応しています。
+
+#### 前提条件
+
+- VS Code
+- Docker Desktop
+- Remote-Containers 拡張機能
+
+#### セットアップ手順
+
+1. VS Code でプロジェクトを開く
+2. コマンドパレット（`Ctrl+Shift+P`）で「Dev Containers: Reopen in Container」を実行
+3. コンテナが構築され、Java 21 環境で開発可能
+
+#### 利用可能な設定
+
+**基本設定（devcontainer.json）**
+
+- Java 21 がプリインストール
+- 必要な VS Code 拡張機能が自動インストール
+- ポート 8080 が自動転送
+
+**Docker Compose 設定（devcontainer-compose.json）**
+
+- Java 21 + PostgreSQL 環境
+- データベース付きで本格的な開発が可能
+- ポート 8080（アプリ）、5432（DB）が利用可能
+
+### ローカル開発
+
+#### 前提条件
+
+- Java 21 以上
+- Docker（任意、データベースコンテナ用）
+
+#### セットアップ
+
+```bash
+# プロジェクトをクローン
+git clone <repository-url>
+cd kotlin-spring-practice
+
+# 実行権限を付与（Linux/Mac）
+chmod +x gradlew
+
+# ビルド
+./gradlew build
+
+# アプリケーション起動
+./gradlew bootRun
+```
+
+### 開発用タスク
+
+VS Code で以下のタスクが利用可能：
+
+- **Spring Boot: Run** - アプリケーションを起動
+- **Gradle: Build** - プロジェクトをビルド
+- **Gradle: Test** - テストを実行
+- **Gradle: Spotless Apply** - コードフォーマットを適用
+- **Gradle: KtLint Check** - コード品質チェック
+
 ## 開発での注意点
 
-- Java 17 以上が必要です
+- Java 21 以上が必要です（従来の Java 17 から変更）
 - H2 データベースはインメモリなので、アプリケーション再起動時にデータは消えます
 - 開発時は `spring-boot-devtools` が有効になっているため、コード変更時に自動でリロードされます
 - Kotlin 2.0.20 の K2 コンパイラを使用しているため、コンパイルが高速です
+- Spotless により KtLint の指摘が自動修正されます
 
 ## 学習ポイント
 

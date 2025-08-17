@@ -2,20 +2,17 @@ package com.example.kotlinspringpractice.util
 
 import com.example.kotlinspringpractice.model.User
 
-/**
- * Kotlin Collection Operations vs Java Stream
- * JavaのStreamに相当するKotlinの機能デモ
- */
-
-fun getSampleUsers(): List<User> = listOf(
-    User(id = 1, name = "Alice", email = "alice@example.com", age = 25),
-    User(id = 2, name = "Bob", email = "bob@example.com", age = 30),
-    User(id = 3, name = "Charlie", email = "charlie@example.com", age = 35),
-    User(id = 4, name = "Diana", email = "diana@example.com", age = 28),
-    User(id = 5, name = "Eve", email = "eve@example.com", age = 22),
-    User(id = 6, name = "Frank", email = "frank@example.com", age = 40),
-    User(id = 7, name = "Grace", email = "grace@example.com", age = null),
-)
+/** Kotlin Collection Operations vs Java Stream JavaのStreamに相当するKotlinの機能デモ */
+fun getSampleUsers(): List<User> =
+    listOf(
+        User(id = 1, name = "Alice", email = "alice@example.com", age = 25),
+        User(id = 2, name = "Bob", email = "bob@example.com", age = 30),
+        User(id = 3, name = "Charlie", email = "charlie@example.com", age = 35),
+        User(id = 4, name = "Diana", email = "diana@example.com", age = 28),
+        User(id = 5, name = "Eve", email = "eve@example.com", age = 22),
+        User(id = 6, name = "Frank", email = "frank@example.com", age = 40),
+        User(id = 7, name = "Grace", email = "grace@example.com", age = null),
+    )
 
 // ======================
 // 1. フィルタリング操作
@@ -49,9 +46,7 @@ fun getUserNames(): List<String> {
 fun getUserDisplayInfo(): List<String> {
     val users = getSampleUsers()
 
-    return users
-        .filter { it.age != null }
-        .map { "${it.name.uppercase()} (${it.age})" }
+    return users.filter { it.age != null }.map { "${it.name.uppercase()} (${it.age})" }
 }
 
 // ======================
@@ -63,18 +58,14 @@ fun getUserDisplayInfo(): List<String> {
 fun groupUsersByAgeGroup(): Map<Int, List<User>> {
     val users = getSampleUsers()
 
-    return users
-        .filter { it.age != null }
-        .groupBy { it.age!! / 10 }
+    return users.filter { it.age != null }.groupBy { it.age!! / 10 }
 }
 
 // 名前でグループ化（より複雑な例）
 fun groupUsersByNameLength(): Map<Int, List<String>> {
     val users = getSampleUsers()
 
-    return users
-        .groupBy { it.name.length }
-        .mapValues { (_, userList) -> userList.map { it.name } }
+    return users.groupBy { it.name.length }.mapValues { (_, userList) -> userList.map { it.name } }
 }
 
 // ======================
@@ -86,36 +77,28 @@ fun groupUsersByNameLength(): Map<Int, List<String>> {
 fun getTotalAge(): Int {
     val users = getSampleUsers()
 
-    return users
-        .mapNotNull { it.age }
-        .sum()
+    return users.mapNotNull { it.age }.sum()
 }
 
 // 平均年齢
 fun getAverageAge(): Double {
     val users = getSampleUsers()
 
-    return users
-        .mapNotNull { it.age }
-        .average()
+    return users.mapNotNull { it.age }.average()
 }
 
 // カスタム集約
 fun getConcatenatedNames(): String {
     val users = getSampleUsers()
 
-    return users
-        .map { it.name }
-        .reduce { acc, name -> "$acc, $name" }
+    return users.map { it.name }.reduce { acc, name -> "$acc, $name" }
 }
 
 // fold を使った集約（初期値あり）
 fun getUserSummary(): String {
     val users = getSampleUsers()
 
-    return users.fold("Users: ") { acc, user ->
-        "$acc${user.name}(${user.age ?: "unknown"}); "
-    }
+    return users.fold("Users: ") { acc, user -> "$acc${user.name}(${user.age ?: "unknown"}); " }
 }
 
 // ======================
@@ -127,7 +110,8 @@ fun expensiveOperationWithSequence(): List<String> {
     val users = getSampleUsers()
 
     // Sequence を使用（遅延評価）
-    return users.asSequence()
+    return users
+        .asSequence()
         .filter {
             println("Filtering: ${it.name}") // デバッグ用
             it.age != null && it.age > 25
@@ -198,17 +182,13 @@ fun findFirstUserStartingWithA(): User? {
 fun findOldestUser(): User? {
     val users = getSampleUsers()
 
-    return users
-        .filter { it.age != null }
-        .maxByOrNull { it.age!! }
+    return users.filter { it.age != null }.maxByOrNull { it.age!! }
 }
 
 fun findYoungestUser(): User? {
     val users = getSampleUsers()
 
-    return users
-        .filter { it.age != null }
-        .minByOrNull { it.age!! }
+    return users.filter { it.age != null }.minByOrNull { it.age!! }
 }
 
 // ======================
@@ -220,27 +200,21 @@ fun findYoungestUser(): User? {
 fun sortUsersByAge(): List<User> {
     val users = getSampleUsers()
 
-    return users
-        .filter { it.age != null }
-        .sortedBy { it.age }
+    return users.filter { it.age != null }.sortedBy { it.age }
 }
 
 // 複数条件でソート
 fun sortUsersByAgeAndName(): List<User> {
     val users = getSampleUsers()
 
-    return users
-        .filter { it.age != null }
-        .sortedWith(compareBy<User> { it.age }.thenBy { it.name })
+    return users.filter { it.age != null }.sortedWith(compareBy<User> { it.age }.thenBy { it.name })
 }
 
 // 降順ソート
 fun sortUsersByAgeDescending(): List<User> {
     val users = getSampleUsers()
 
-    return users
-        .filter { it.age != null }
-        .sortedByDescending { it.age }
+    return users.filter { it.age != null }.sortedByDescending { it.age }
 }
 
 // ======================
@@ -252,19 +226,14 @@ fun sortUsersByAgeDescending(): List<User> {
 fun getUniqueAges(): List<Int> {
     val users = getSampleUsers()
 
-    return users
-        .mapNotNull { it.age }
-        .distinct()
+    return users.mapNotNull { it.age }.distinct()
 }
 
 // カスタム重複除去
 fun getUniqueNameLengths(): List<Int> {
     val users = getSampleUsers()
 
-    return users
-        .map { it.name.length }
-        .distinct()
-        .sorted()
+    return users.map { it.name.length }.distinct().sorted()
 }
 
 // ======================
@@ -276,10 +245,7 @@ fun getUniqueNameLengths(): List<Int> {
 fun partitionUsersByAge(): Pair<List<User>, List<User>> {
     val users = getSampleUsers()
 
-    val (adults, young) =
-        users
-            .filter { it.age != null }
-            .partition { it.age!! >= 30 }
+    val (adults, young) = users.filter { it.age != null }.partition { it.age!! >= 30 }
 
     return Pair(adults, young)
 }
@@ -299,9 +265,7 @@ fun flattenUserEmails(): List<String> {
 
     // Java Stream equivalent:
     // userGroups.stream().flatMap(List::stream).map(User::getEmail)
-    return userGroups
-        .flatten()
-        .map { it.email }
+    return userGroups.flatten().map { it.email }
 }
 
 // ======================

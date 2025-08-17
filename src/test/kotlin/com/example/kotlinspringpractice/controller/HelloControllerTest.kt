@@ -13,19 +13,20 @@ import kotlin.test.Test
 @SpringBootTest
 @AutoConfigureMockMvc
 class HelloControllerTest {
-    @Autowired
-    private lateinit var mockMvc: MockMvc
+    @Autowired private lateinit var mockMvc: MockMvc
 
     @Test
     fun `should return hello message`() {
-        mockMvc.perform(get("/api/hello"))
+        mockMvc
+            .perform(get("/api/hello"))
             .andExpect(status().isOk)
             .andExpect(content().string("Hello, Kotlin Spring Boot!"))
     }
 
     @Test
     fun `should return health status`() {
-        mockMvc.perform(get("/api/health"))
+        mockMvc
+            .perform(get("/api/health"))
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.status").value("UP"))
             .andExpect(jsonPath("$.message").value("Application is running"))

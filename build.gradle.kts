@@ -12,21 +12,14 @@ plugins {
 }
 
 group = "com.example"
+
 version = "0.0.1-SNAPSHOT"
 
-java {
-    sourceCompatibility = JavaVersion.VERSION_17
-}
+java { sourceCompatibility = JavaVersion.VERSION_21 }
 
-configurations {
-    compileOnly {
-        extendsFrom(configurations.annotationProcessor.get())
-    }
-}
+configurations { compileOnly { extendsFrom(configurations.annotationProcessor.get()) } }
 
-repositories {
-    mavenCentral()
-}
+repositories { mavenCentral() }
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
@@ -49,18 +42,14 @@ tasks.withType<KotlinCompile> {
             "-Xjsr305=strict",
             "-Xjvm-default=all",
         )
-        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
+        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21)
     }
 }
 
-tasks.withType<Test> {
-    useJUnitPlatform()
-}
+tasks.withType<Test> { useJUnitPlatform() }
 
 // コンパイル前にSpotlessを実行
-tasks.withType<KotlinCompile> {
-    dependsOn("spotlessApply")
-}
+tasks.withType<KotlinCompile> { dependsOn("spotlessApply") }
 
 // KtLint設定（Detektの代替として）
 ktlint {
@@ -78,17 +67,11 @@ ktlint {
     }
 }
 
-springBoot {
-    mainClass.set("com.example.kotlinspringpractice.KotlinSpringPracticeApplicationKt")
-}
+springBoot { mainClass.set("com.example.kotlinspringpractice.KotlinSpringPracticeApplicationKt") }
 
-tasks.named("compileKotlin") {
-    dependsOn("spotlessApply")
-}
+tasks.named("compileKotlin") { dependsOn("spotlessApply") }
 
-tasks.named("compileTestKotlin") {
-    dependsOn("spotlessApply")
-}
+tasks.named("compileTestKotlin") { dependsOn("spotlessApply") }
 
 // Spotless設定 - 自動フォーマット
 spotless {
@@ -96,14 +79,9 @@ spotless {
         target("**/*.kt")
         targetExclude("**/build/**", "**/bin/**")
 
-        // KtLintでルールチェックと自動修正
+        // KtLintを使用（EditorConfigで設定制御）
         ktlint("1.0.1")
             .setEditorConfigPath("$projectDir/.editorconfig")
-            .editorConfigOverride(
-                mapOf(
-                    "ktlint_standard_parameter-list-wrapping" to "disabled",
-                ),
-            )
 
         // 基本的なフォーマット
         trimTrailingWhitespace()
